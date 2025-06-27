@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Neue Zeiterfassung</h5>
+                    
+                    <!-- Aktivitätstyp -->
+                    <div class="mb-3">
+                        <label for="activityType" class="form-label">Aktivitätstyp</label>
+                        <select class="form-select" id="activityType" required>
+                            <option value="" selected disabled>Aktivitätstyp wählen</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Kunde (nur für Kundenprojekte) -->
+                    <div class="mb-3" id="customerSection" style="display: none;">
+                        <label for="customer" class="form-label">Kunde</label>
+                        <select class="form-select" id="customer" disabled required>
+                            <option value="" selected disabled>Kunde wählen</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Projekt (nur für Kundenprojekte) -->
+                    <div class="mb-3" id="projectSection" style="display: none;">
+                        <label for="project" class="form-label">Projekt</label>
+                        <select class="form-select" id="project" disabled required>
+                            <option value="" selected disabled>Projekt wählen</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Chargeable/Non-Chargeable (nur für Kundenprojekte) -->
+                    <div class="mb-3" id="chargeableSection" style="display: none;">
+                        <label for="chargeable" class="form-label">Aktivitätstyp</label>
+                        <select class="form-select" id="chargeable" disabled required>
+                            <option value="" selected disabled>Bitte wählen</option>
+                            <option value="true">Chargeable</option>
+                            <option value="false">Non-Chargeable</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Kategorie -->
+                    <div class="mb-3" id="categorySection" style="display: none;">
+                        <label for="category" class="form-label">Kategorie</label>
+                        <select class="form-select" id="category" disabled required>
+                            <option value="" selected disabled>Kategorie wählen</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Projekt-ID (versteckt) -->
+                    <input type="hidden" id="projectId">
+                    
+                    <!-- Timer -->
+                    <div class="mb-3">
+                        <label class="form-label">Timer</label>
+                        <div class="d-flex align-items-center">
+                            <span id="timer" class="me-2">00:00:00</span>
+                            <button class="btn btn-primary me-2" id="startTimer" disabled>Start</button>
+                            <button class="btn btn-danger" id="stopTimer" disabled>Stop</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Kommentar -->
+                    <div class="mb-3">
+                        <label for="comment" class="form-label">Kommentar</label>
+                        <textarea class="form-control" id="comment" rows="3" disabled required></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Wochenübersicht</h5>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Aktivität</th>
+                                    <th>Projekt-ID</th>
+                                    <th>Kategorie-ID</th>
+                                    <th>Montag</th>
+                                    <th>Dienstag</th>
+                                    <th>Mittwoch</th>
+                                    <th>Donnerstag</th>
+                                    <th>Freitag</th>
+                                    <th>Gesamt</th>
+                                </tr>
+                            </thead>
+                            <tbody id="weeklyOverview">
+                                <!-- Wird dynamisch gefüllt -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal für Zeiteintragsbearbeitung -->
+<div class="modal fade" id="timeEntryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Zeiteintrag bearbeiten</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="timeEntryForm">
+                    <input type="hidden" id="editActivityId">
+                    <input type="hidden" id="editDay">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Aktivität: <span id="editActivityName"></span></label>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Project ID: <span id="editProjectId"></span></label>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kategorie ID: <span id="editCategoryId"></span></label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editTime" class="form-label">Zeit (HH:MM)</label>
+                        <input type="text" class="form-control" id="editTime" required pattern="^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editComment" class="form-label">Kommentar</label>
+                        <textarea class="form-control" id="editComment" rows="3" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                <button type="button" class="btn btn-primary" id="saveTimeEntry">Speichern</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/timer.js') }}"></script>
+<script src="{{ url_for('static', filename='js/timesheet.js') }}"></script>
+{% endblock %} 

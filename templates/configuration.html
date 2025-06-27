@@ -1,0 +1,439 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <h2>Konfiguration</h2>
+    
+    <!-- Tabs für verschiedene Konfigurationsbereiche -->
+    <ul class="nav nav-tabs mb-4" id="configTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="customer-tab" data-bs-toggle="tab" href="#customer" role="tab">Kundenprojekte</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="internal-tab" data-bs-toggle="tab" href="#internal" role="tab">Arbeitszeit im Unternehmen</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="absence-tab" data-bs-toggle="tab" href="#absence" role="tab">Abwesenheit</a>
+        </li>
+    </ul>
+    
+    <!-- Tab-Inhalte -->
+    <div class="tab-content" id="configTabContent">
+        <!-- Kundenprojekte -->
+        <div class="tab-pane fade show active" id="customer" role="tabpanel">
+            <div class="d-flex justify-content-between mb-4">
+                <h3>Kundenprojekte</h3>
+                <button class="btn btn-primary" onclick="window.config.openCustomerModal()">
+                    <i class="bi bi-plus"></i> Neuen Kunden anlegen
+                </button>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%">Kunde</th>
+                            <th>Projekte & Jobbezeichnungen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customerTable">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Interne Arbeitszeit -->
+        <div class="tab-pane fade" id="internal" role="tabpanel">
+            <div class="d-flex justify-content-between mb-3">
+                <h3>Interne Aktivitäten</h3>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#internalModal">
+                    Neue Aktivität hinzufügen
+                </button>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Aktivität</th>
+                            <th>Projekt-ID</th>
+                            <th>Kategorie</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="internalTable">
+                        <!-- Wird dynamisch gefüllt -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Abwesenheit -->
+        <div class="tab-pane fade" id="absence" role="tabpanel">
+            <div class="d-flex justify-content-between mb-3">
+                <h3>Abwesenheitstypen</h3>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#absenceModal">
+                    Neuen Typ hinzufügen
+                </button>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Typ</th>
+                            <th>Projekt-ID</th>
+                            <th>Kategorie</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="absenceTable">
+                        <!-- Wird dynamisch gefüllt -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal für neue Kundenprojekte -->
+<div class="modal fade" id="customerModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Neuen Kunden anlegen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="customerForm">
+                    <div class="mb-3">
+                        <label for="customerName" class="form-label">Kundenname</label>
+                        <input type="text" class="form-control" id="customerName" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <div>
+                    <button type="button" class="btn btn-outline-danger" id="deleteCustomerBtn" style="display: none;">
+                        <i class="bi bi-trash"></i> Kunde löschen
+                    </button>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="button" class="btn btn-primary" id="saveCustomer">Speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal für neues Projekt -->
+<div class="modal fade" id="projectModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Neues Projekt hinzufügen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="projectForm">
+                    <input type="hidden" id="projectCustomerId">
+                    <div class="mb-3">
+                        <label for="projectName" class="form-label">Projektname</label>
+                        <input type="text" class="form-control" id="projectName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="chargeableProjectId" class="form-label">Chargeable Projekt-ID</label>
+                        <input type="text" class="form-control" id="chargeableProjectId" required pattern="^\d{6}\.\d{2}\.\d{2}\.\d{2}$">
+                        <small class="form-text text-muted">Format: 312464.02.01.02</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nonChargeableProjectId" class="form-label">Non-Chargeable Projekt-ID</label>
+                        <input type="text" class="form-control" id="nonChargeableProjectId" required pattern="^\d{6}\.\d{2}\.\d{2}\.\d{2}$">
+                        <small class="form-text text-muted">Format: 312464.02.01.04</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                <button type="button" class="btn btn-primary" id="saveProject">Speichern</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal für neue Jobbezeichnung -->
+<div class="modal fade" id="categoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Neue Jobbezeichnung hinzufügen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="categoryForm">
+                    <input type="hidden" id="categoryProjectId">
+                    <div class="mb-3">
+                        <label for="categoryName" class="form-label">Jobbezeichnung</label>
+                        <input type="text" class="form-control" id="categoryName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoryId" class="form-label">Kategorie-ID</label>
+                        <input type="text" class="form-control" id="categoryId" required pattern="^H\d{5}(\.\d{1,2})?$">
+                        <small class="form-text text-muted">Format: H02006.13</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                <button type="button" class="btn btn-primary" id="saveCategory">Speichern</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal für neue interne Aktivität -->
+<div class="modal fade" id="internalModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Neue interne Aktivität</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="internalForm">
+                    <div class="mb-3">
+                        <label for="internalName" class="form-label">Aktivitätsname</label>
+                        <input type="text" class="form-control" id="internalName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="internalProjectId" class="form-label">Projekt-ID</label>
+                        <input type="text" class="form-control" id="internalProjectId" required value="890023" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="internalCategoryId" class="form-label">Kategorie-ID</label>
+                        <select class="form-select" id="internalCategoryId" required>
+                            <option value="H03107">H03107 - Professional Development</option>
+                            <option value="H03108">H03108 - Career Development/Mentoring</option>
+                            <option value="H03104">H03104 - Non-client meetings</option>
+                            <option value="H03105">H03105 - Non-client operational activities</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                <button type="button" class="btn btn-primary" id="saveInternal">Speichern</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal für neuen Abwesenheitstyp -->
+<div class="modal fade" id="absenceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Neuen Abwesenheitstyp</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="absenceForm">
+                    <div class="mb-3">
+                        <label for="absenceName" class="form-label">Bezeichnung</label>
+                        <input type="text" class="form-control" id="absenceName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="absenceProjectId" class="form-label">Projekt-ID</label>
+                        <input type="text" class="form-control" id="absenceProjectId" required value="890085" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="absenceCategoryId" class="form-label">Kategorie-ID</label>
+                        <select class="form-select" id="absenceCategoryId" required>
+                            <option value="H03147">H03147 - Other Paid Time off</option>
+                            <option value="H03128">H03128 - Sickness Leave</option>
+                            <option value="H03118">H03118 - Holiday Time</option>
+                            <option value="H03003">H03003 - Special Leave</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                <button type="button" class="btn btn-primary" id="saveAbsence">Speichern</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal für Projektbearbeitung -->
+<div class="modal fade" id="editProjectModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Projekt bearbeiten</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editProjectForm">
+                    <input type="hidden" id="editProjectId">
+                    <div class="mb-4">
+                        <h6>Projektdetails</h6>
+                        <div class="mb-3">
+                            <label for="editProjectName" class="form-label">Projektname</label>
+                            <input type="text" class="form-control" id="editProjectName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editChargeableProjectId" class="form-label">Chargeable Projekt-ID</label>
+                            <input type="text" class="form-control" id="editChargeableProjectId" required pattern="^\d{6}\.\d{2}\.\d{2}\.\d{2}$">
+                            <small class="form-text text-muted">Format: 312464.02.01.02</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editNonChargeableProjectId" class="form-label">Non-Chargeable Projekt-ID</label>
+                            <input type="text" class="form-control" id="editNonChargeableProjectId" required pattern="^\d{6}\.\d{2}\.\d{2}\.\d{2}$">
+                            <small class="form-text text-muted">Format: 312464.02.01.04</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0">Jobbezeichnungen</h6>
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="window.config.addJobRow()">
+                                + Neue Jobbezeichnung
+                            </button>
+                        </div>
+                        <div id="editJobList" class="job-list">
+                            <!-- Hier werden die Jobbezeichnungen dynamisch eingefügt -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-danger" onclick="window.config.deleteProject(document.getElementById('editProjectId').value)">
+                    <i class="bi bi-trash-fill"></i> Projekt löschen
+                </button>
+                <div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="button" class="btn btn-primary" id="saveEditProject">Speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Kunden-Spalte */
+.table td:first-child {
+    background: var(--bs-gray-100);
+    border-right: 1px solid var(--bs-gray-200);
+    width: 25%;
+}
+
+/* Basis-Styles */
+.table {
+    --bs-table-hover-bg: rgba(var(--bs-primary-rgb), 0.02);
+}
+
+.table > :not(caption) > * > * {
+    padding: 1.25rem;
+    vertical-align: middle;
+}
+
+/* Projekt-Container */
+.project-container {
+    background: #fff;
+    border: 1px solid var(--bs-gray-200);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.project-container:last-child {
+    margin-bottom: 0;
+}
+
+.project-header h6 {
+    color: var(--bs-gray-900);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Job-Bezeichnungen */
+.job-titles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.job-title-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background-color: var(--bs-gray-100);
+    border-radius: 4px;
+}
+
+.job-title-container:hover {
+    background-color: var(--bs-gray-200);
+}
+
+/* Spezieller Style für den Hinzufügen-Button */
+.job-title-container.add-job {
+    border: 1px dashed var(--bs-gray-400);
+    background-color: transparent;
+    transition: all 0.2s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+}
+
+.job-title-container.add-job:hover {
+    background-color: var(--bs-gray-100);
+    border-color: var(--bs-gray-500);
+}
+
+.job-title-container.add-job .job-title-name {
+    color: var(--bs-gray-600);
+}
+
+.job-title-container.add-job:hover .job-title-name {
+    color: var(--bs-gray-700);
+}
+
+.add-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    margin-right: 0.5rem;
+    border: 1.5px solid currentColor;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 0;
+    position: relative;
+    top: -1px;
+}
+
+/* Job-Liste im Modal */
+.job-list .job-row {
+    background-color: var(--bs-gray-100);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.job-list .job-row:last-child {
+    margin-bottom: 0;
+}
+</style>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/configuration.js') }}"></script>
+{% endblock %} 

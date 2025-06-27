@@ -1,0 +1,73 @@
+Herausforderungen bei der Entwicklung eines nutzerfreundlichen Timetracking-Tools
+1. Komplexe Datenstrukturen vs. Einfache Bedienung
+Problem:
+Die hierarchische Struktur von Kunden → Projekten → Jobbezeichnungen ist komplex, aber notwendig für die Rechnungsstellung und Zeiterfassung. Dies führt zu Herausforderungen in der Benutzeroberfläche:
+Tiefe Verschachtelung der Daten (Kunde > Projekt > Jobbezeichnung)
+Viele verschiedene IDs und Kategorien müssen verwaltet werden
+Unterscheidung zwischen "Chargeable" und "Non-Chargeable" Zeiten
+Beobachtete Schwierigkeiten:
+Nutzer haben Probleme, die richtigen Kategorien zu finden
+Verwaltung der Struktur (z.B. Bearbeiten/Löschen von Kunden) ist nicht intuitiv
+Zu viele Klicks notwendig für häufige Aktionen
+2. Benutzerinteraktion und Feedback
+Problem:
+Die Interaktion mit dem System muss klar und verständlich sein. Aktuelle Herausforderungen:
+Fehlende visuelle Hinweise für mögliche Aktionen
+Unklare Feedback-Mechanismen bei Aktionen
+Versteckte Funktionalitäten (z.B. Bearbeiten/Löschen von Kunden)
+Beispiel:
+In unserer aktuellen Implementation war es schwierig, die Bearbeitungs- und Lösch-Funktionen für Kunden intuitiv zu gestalten. Die Buttons waren zunächst nicht sichtbar, was zu Verwirrung führte.
+3. Datenkonsistenz und Geschäftslogik
+Problem:
+Die komplexe Geschäftslogik muss benutzerfreundlich abgebildet werden:
+Automatische Erstellung von Non-Chargeable Kategorien
+Verknüpfung von Projekten mit spezifischen IDs
+Validierung von Eingaben (z.B. Projekt-ID Formate)
+Auswirkungen:
+Nutzer verstehen nicht, warum bestimmte Aktionen nicht möglich sind
+Fehlerhafte Eingaben führen zu frustrierenden Erfahrungen
+4. UX-Design Empfehlungen
+Vereinfachung der Oberfläche:
+Quick-Actions für häufige Aufgaben
+Direkter Zugriff auf oft genutzte Funktionen
+Reduzierung der Klickpfade
+Klare visuelle Hierarchie
+Wichtige Aktionen deutlich sichtbar machen
+Konsistente Positionierung von Aktions-Buttons
+Kontextsensitive Hilfe
+Tooltips für komplexe Funktionen
+Inline-Hilfe bei Eingabefeldern
+Verbesserung der Benutzerführung:
+Wizards für komplexe Prozesse
+Schrittweise Führung bei der Erstellung neuer Einträge
+Validierung in Echtzeit
+Intelligente Vorschläge
+Automatische Vervollständigung von Projektnummern
+Vorschläge basierend auf häufigen Eingaben
+5. Technische Herausforderungen
+Backend-Integration:
+Komplexe API-Aufrufe müssen performant sein
+Fehlerbehandlung muss benutzerfreundlich sein
+Caching für bessere Reaktionszeiten
+Frontend-Entwicklung:
+Dynamische Aktualisierung der UI
+Konsistente Darstellung über verschiedene Bildschirmgrößen
+Barrierefreiheit beachten
+6. Empfehlungen für die Weiterentwicklung
+Kurzfristig:
+Vereinfachung der Navigation
+Reduzierung der Klickpfade
+Bessere visuelle Hinweise für verfügbare Aktionen
+Verbesserung des Feedbacks
+Klare Erfolgsmeldungen
+Verständliche Fehlermeldungen
+Langfristig:
+Intelligente Automatisierung
+Vorschlagssystem für Zeiteinträge
+Automatische Kategorisierung
+Personalisierung
+Anpassbare Dashboards
+Individuelle Voreinstellungen
+Fazit
+Die Entwicklung eines nutzerfreundlichen Timetracking-Tools erfordert einen ausgewogenen Ansatz zwischen notwendiger Komplexität für die Geschäftsanforderungen und einfacher Bedienbarkeit für die Endnutzer. Der Fokus sollte auf der Vereinfachung häufiger Aufgaben liegen, während die komplexe Datenstruktur im Hintergrund verwaltet wird.
+Diese Erkenntnisse können als Grundlage für die weitere Entwicklung und Verbesserung des Systems dienen und in der Bachelorarbeit als praktische Beispiele für die Herausforderungen bei der Entwicklung nutzerfreundlicher Geschäftsanwendungen verwendet werden.
