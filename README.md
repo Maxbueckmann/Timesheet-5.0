@@ -171,7 +171,7 @@ Required Entries:
     ├── Category: H03003 - Time off - Paid absence / non-holiday
     └── Notes: External comment erforderlich ("Bank holiday" oder "Wellness Day")
 Zweck: Definiert alle möglichen Abwesenheitstypen (Uni Zeit, Krankheit, Urlaub, Feiertag …), jeweils mit festem Category-Wert und evtl. zusätzlichen Hinweisen.
-Project ID = 890085 – wird später in der Zeiterfassung bei Auswahl „Abwesenheit“ automatisch hinterlegt.
+Project ID = 890085 – wird später in der Zeiterfassung bei Auswahl "Abwesenheit" automatisch hinterlegt.
 3) Arbeitszeit im Unternehmen (Project ID: 890023)
 plaintext
 Code kopieren
@@ -188,7 +188,7 @@ Required Entries:
 └── Interne Arbeit
     └── Category: H03105 - Internal - Non-client operational activities
 Zweck: Definiert interne Arbeitszeiten (z. B. Ausbildungszeit, Meetings …) inkl. vordefinierter Categories und Notes.
-Project ID = 890023 – wird später verwendet, wenn der Eintragstyp „Arbeitszeit im Unternehmen“ gewählt wird.
+Project ID = 890023 – wird später verwendet, wenn der Eintragstyp "Arbeitszeit im Unternehmen" gewählt wird.
 B) ZEITERFASSUNG
 (Das ist die Nutzeroberfläche, in der Zeiten erfasst werden. Sie greift auf die obige Konfiguration zurück.)
 
@@ -237,12 +237,12 @@ Zeiterfassung → [Button: "Start Timer"]
 Wichtige Abhängigkeiten:
 
 Für Kundenprojekt:
-Im Dropdown „Kunde“ nur Werte aus Kundenübersicht.
-Bei „Projekt“ nur die Projekte des gewählten Kunden.
-Bei „Kategorie“ nur die in Category_Options definierten Kategorien zu diesem Projekt.
-Chargeable oder Non-Chargeable entscheidet, welche Project ID intern verwendet wird (z. B. 123456 vs. 654321).
-Für Abwesenheit: Fixe Project ID (890085); bei „Typ“ nur die unter Abwesenheit hinterlegten Werte.
-Für Arbeitszeit: Fixe Project ID (890023); bei „Interner Typ“ nur die vordefinierten Optionen (Ausbildungszeit, …).
+Im Dropdown "Kunde" nur Werte aus Kundenübersicht.
+Bei "Projekt" nur die Projekte des gewählten Kunden.
+Bei "Kategorie" nur die in Category_Options definierten Kategorien zu diesem Projekt.
+Chargeable oder Non-Chargeable entscheidet, welche Project ID intern verwendet wird (z. B. 123456 vs. 654321).
+Für Abwesenheit: Fixe Project ID (890085); bei "Typ" nur die unter Abwesenheit hinterlegten Werte.
+Für Arbeitszeit: Fixe Project ID (890023); bei "Interner Typ" nur die vordefinierten Optionen (Ausbildungszeit, …).
 2) TIMER LÄUFT
 plaintext
 Code kopieren
@@ -272,3 +272,5 @@ Code kopieren
 │ [Button: "Speichern"]                                                    │
 │   -> Speichert den Eintrag endgültig in der Datenbank (o.ä.).            │
 └────────────────────────────────────────────────────────────────────────────┘
+
+<!-- Test: Schreibrechte durch Cursor AI am 2024-06-09 -->
